@@ -1,0 +1,50 @@
+---------------------------------------------------------------------
+ASTRO kirjaston hyodyllisia rutiineja
+(taydellinen listaus astro/contents.pro
+---------------------------------------------------------------------
+
+doc_library,'OHJELMA'  --> help
+
+
+PLANET_COORDS - Return low-precision RA and Dec of planets give a date(s)
+
+
+ADSTRING() - Format RA and DEC as a character string
+DAYCNV- Convert from Julian Date to calendar date.
+EQ2HOR - Convert celestial  (ra-dec) coords to local horizon coords (alt-az).
+GET_COORDS - Read in angular input in decimal or sexigesimal format
+GET_DATE - Get the current date in CCYY-MM-DD format (FITS standard)
+GET_JULDATE - Get the current Julian date as a double precision scalar
+
+GLACTC- Convert between Galactic (or SuperGalactic) and equatorial coordinates
+
+HADEC2ALTAZ -  Converts Hour Angle and Declination to Horizon (alt-az) coordinates                                 
+HELIO - Compute (low-precision) heliocentric coordinates of the planets 
+HELIO_JD() - Convert geocentric (reduced) Julian date to heliocentric Julian date
+
+HOR2EQ - Convert local horizon coords (alt-az) to equatorial (ra-dec).
+
+JDCNV - Convert from calendar date to Julian date.
+
+JPRECESS - Precess positions & proper motions from B1950 to J2000
+JULDATE-Convert from calendar date to reduced Julian date. 
+
+MOONPOS- Compute the RA and Dec (and distance) of the Moon at a given date
+MPHASE - Compute illuminated fraction of the Moon's disk for given Julian dates
+
+
+
+PRECESS - Precess RA and Dec to a new equinox
+
+RADEC - Format RA, Dec as Hours,Min,Sec,Deg,Min,Sec
+SIXTY - Convert decimal number to sexigesimal                 
+
+
+SUNPOS - Compute the RA and Dec of the Sun at a given date
+
+TEN() - Convert sexigesimal number to decimal             
+TENV() -  Like TEN but will work on a vector of sexigesimal numbers.
+
+
+XYZ - Compute heliocentric rectangular coordinates at given Julian date.
+
