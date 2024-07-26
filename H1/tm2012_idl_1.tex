@@ -1,0 +1,301 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4,landscape]{seminar}
+%\slidesmag{1}
+%\documentstyle[a4paper]{letter}
+%\documentstyle[fullpage]{letter}
+\usepackage{graphicx} 
+\usepackage{amsmath} 
+\usepackage{color}
+
+%\usepackage{pstcol} % To use the standard `color' package with Seminar
+%\usepackage{semcolor}
+%\usepackage{slidesec}
+%\input{seminar.bug}
+%\input{seminar.bg2} % See the Seminar bugs list
+%\usepackage{pst-grad}
+
+\definecolor{LemonChiffon}{rgb}{1.,0.98,0.8}
+\definecolor{Gold}{rgb}{1.,0.84,0.}
+\definecolor{darkblue}{rgb}{0.25,0.,0.95}
+\definecolor{lightblue}{rgb}{0.4,0.65,0.95}
+%\slideframe[\psset{fillstyle=gradient,gradmidpoint=0.0,
+%                   gradbegin=lightblue,gradend=darkblue}]{scplain}
+
+\def\pp{\mathaccent "7F }
+\def\p{\mathaccent 95 }
+
+
+\def\sini {\sin i}
+\def\cosi {\cos i}
+
+\def\sino {\sin \Omega}
+\def\coso {\cos \Omega}
+
+\def\sinw {\sin \omega}
+\def\cosw {\cos \omega}
+
+
+
+\begin{document}
+\font\norm=cmr12
+\font\hugeb=cmb22
+\font\isob=cmb18
+\font\iso=cmr18
+\font\med=cmr14
+\font\medb=cmb14
+\baselineskip 0.6cm
+\parskip\medskipamount
+\parskip 0.5cm
+\parindent 5mm
+
+%\boldmath
+
+\norm
+\hsize 16cm
+\vsize 30cm
+\newcommand{\bul}{$\bullet \ \ $}
+\newcommand{\buu}{\hskip 0.5cm}
+\newcommand{\arrow}{$\Rightarrow \ \ $}
+\newcommand{\barrow}{\hskip 0.5cm $\Rightarrow \ \ $}
+\newcommand{\larrow}{\hskip 0.5cm $\Leftarrow \ \ $}
+\newcommand{\hlin}{\vskip 0.5cm}
+\newcommand{\hpar}{\vskip 1.0cm}
+\newcommand{\nin}{\noindent}
+\def\pii{\tilde{\omega}_\circ}
+
+\newcommand{\VV}{$\vec V$ \hskip 0.1cm}
+\newcommand{\RR}{$\vec R$ \hskip 0.1cm}
+
+\newcommand{\VVE}{\vec V}
+\newcommand{\RRE}{\vec R}
+
+%\pagestyle{empty}
+{\centerline{}
+
+
+
+
+{\norm
+\vskip 0cm
+{{\centerline { {\isob CELESTIAL MECHANICS (Fall 2012): }}}}
+\vskip 0.2cm
+{{\centerline { {\isob COMPUTER EXERCISES I}}}}
+
+{{\centerline { { (Heikki Salo 5.10.2010)}}}}
+
+\vskip 2cm
+{\medb 1. Solution of Kepler's equation}
+
+{\medb 2. Study elliptical orbits}
+
+{\medb 3. Compare different anomalies: $E$, $f$, $M$}
+
+{\medb 4. Numerical evaluation of time averages on elliptical orbit}
+
+
+
+\newpage
+
+{\isob 1. Solution of Kepler's equation} (kepler.pro, kepler\_demo.pro)
+
+
+The position \RR and velocity \VV in an elliptic orbit 
+can not be expressed in a closed form as a function of time $t$.  However,
+\RR and \VV can calculated either by using the true anomaly
+$f$ or the eccentric anomaly $E$. To obtain either $f$ or $E$ one
+needs to first solve the Kepler's equation, connecting $E$ and the
+mean anomaly $M$:
+\begin{equation}
+M = \sqrt{\mu/a^3} (t-\tau) = E - \epsilon \sin E
+\end{equation}
+\noindent where
+\begin{eqnarray}
+\mu  &=& G (m_1 +m_2), \ G= {\rm gravitational \ constant}, \ m_1, m_2 = {\rm masses} \nonumber \\
+\tau &=& { \rm pericenter \ time}, \ a   = { \rm semimajor \ axis}, \ \epsilon =  { \rm eccentricity} \nonumber
+\end{eqnarray}
+\noindent
+To solve $E$ as a function of $M$ from Kepler's equation, $M = E - \epsilon \sin E$, one can use for example substitution iteration. Denote
+$x= \epsilon \sin E $, so that $M=E-x$. From this $E$ can be expressed in the form $E=M+x$, and one can set up an iteration
+\begin{equation}
+E_{i+1} = M + \epsilon \sin E_i, \ \  i=0,1,2,...
+\label{kepler_subs}
+\end{equation}
+\noindent using for example $E_0=M$ as the first approximation. The
+iteration is continued until $|E_{i+1} -E_i|$ is sufficiently small,
+say less than $10^{-10}$.
+
+Another possible way to solve Kepler's equation is to use 
+Newton's method for finding the root of the equation $g(E) = E -\epsilon \sin E -M = 0$.  This is done by the iteration schema
+\begin{equation}
+E_{i+1} = E_i - g(E_i)/g'(E_i), \ \  i=0,1,2,...
+\end{equation}
+\noindent where $g' (E_i)= dg(E_i)/dE_i = 1 - \epsilon \cos E_i$.
+Using here $E_0=M$ as a first guess gives $E_1=M +\epsilon \sin M/(1-\epsilon \cos M )$, which can also be used as an improved starting value in the schema of Eq. \ref{kepler_subs}.
+
+{\bf WHAT TO DO:}  a) Write an IDL-procedure that solves $E$ for a given $M$
+and $\epsilon$, using either of the above described methods.  b) Solve
+the eccentric anomaly $E$ corresponding to mean anomaly $M= 45^\circ$,
+for $\epsilon =0.01, \ 0.05, \ 0.50, \ 0.90, \ 0.99$. How many iteration steps
+are required to reach an accuracy of $0.01^\circ$ in each case?
+Try also what happens for $M=359^\circ$! 
+
+
+
+\newpage
+
+{\isob 2. Study elliptical orbits} \ (elliptic\_demo.pro)
+
+
+a) In terms of eccentric anomaly $E$ the position in elliptic orbit
+can be represented as
+\begin{equation}
+\vec R = \vec A (\cos E - \epsilon) + \vec B \sin E
+\label{eq_vec_r}
+\end{equation}
+\noindent where
+$\vec A $ and $\vec B$ are perpendicular vectors in the plane of the orbit, and $\vec A$ points to the pericenter of the orbit ($|\vec A| = a, \  |\vec B| = b =a \sqrt{1-\epsilon^2}) $. Choose the x-axis parallel to $\vec A$ and plot
+elliptic orbits with eccentricity $\epsilon=0.0, 0.1, ..., 0.8$.
+Use $a=1$ for the semimajor axis, and use for example 200 uniformly chosen
+$E$ values from $0$ to $2 \pi$ to calculate $(x,y)$ points defining the orbit.
+
+
+b) In terms of the true anomaly $f$ (= polar angle from the pericenter), the length of the radius vector is given by
+\begin{equation}
+r = |\vec R| = \frac{a(1-\epsilon^2)}{1+\epsilon \cos f}
+\end{equation}
+\noindent As above, take 200 $f$ values from $0$ to $2 \pi$, and
+calculate $(x,y)$ points defining the orbit.
+
+c) Uniformly chosen $E$ or $f$ values, while easy to use for plotting the
+orbit, do not represent the movement of the particle in its orbit
+during equal time intervals. To do this, one has to take equally
+spaced points in time, or what is equivalent, equally spaced values
+of mean anomaly. Repeat what was done in a) and b) by choosing
+200 uniformly chosen $M$ values from $0$ to $2 \pi$. For each of these,
+solve Kepler's equation to get $E$.
+
+d) Make also a plot with fewer points (say 50), for $\epsilon =0.0$ and $0.8$,
+illustrating the change in speed at various parts of the orbit.
+
+
+e) Make also plots of the length of the radius vector as a function of time.
+Choose equally spaced $M$ values, calculate $E$, and use the equation
+\begin{equation}
+r = |\vec R| = a(1 - \epsilon \cos E)
+\end{equation}
+
+Also check how the central force varies with time (proportional to
+$1/r^2$).  Plot also $1/r^3$ versus time: $2D/r^3$ represents the
+magnitude of the tidal force a particle with a diameter $D$ would
+experience (tidal force = difference in the force felt by the
+different parts of the particle -- differentiate $1/r^2$ with respect to $r$)
+
+f) Play also with velocity. In terms of $E$,
+\begin{equation}
+\vec V =\p {\vec R} = (- \vec A \sin E + \vec B \cos E) \p E,
+\label{eq_vec_v}
+\end{equation}
+\noindent where the derivative $\p E$ is obtained by differentiating Kepler's
+equation,
+\begin{equation}
+\p E = \frac{\sqrt{\mu/a^3}}{(1-\epsilon \cos E)}
+\label{eq_ep}
+\end{equation}
+\noindent You can choose the units by setting $\mu=1,\  a=1$
+(what is the orbital period with these values?)
+
+From the velocity components one can evaluate numerically
+the speed $v= |\vec V|$ as a function of time (via $E$), as well as
+the  radial velocity $v_r= \vec V \cdot \vec R/r$, and the
+tangential velocity $v_t=|\vec V - v_r \vec R/r|$.
+Compare these with the analytical formulas derived in the lectures (exercise I.6),
+\begin{eqnarray}
+v_r &=& v_{circ} \ a/r \ \epsilon \ \sin E \\ \nonumber
+v_t &=& v_{circ} \ b/r \\ \nonumber
+v   &=& v_{circ} \ \sqrt{\frac{1+\epsilon \cos E}{1-\epsilon \cos E}}
+\label{eq_vr}
+\end{eqnarray}
+\noindent where $v_{circ}= \sqrt{\mu/a}$ is the speed on a circular orbit.
+
+g) Finally, study how the kinetic energy and potential energy (of the
+relative orbit per unit mass) vary on different positions in the eccentric orbit, $E_{kin}=\frac{1}{2}v^2$ and $E_{pot}=-\mu/r$. Also verify that their sum equals the total energy
+$h=-\frac{\mu}{2a}$.
+Also check that the angular momentum $\vec R \times \vec V$ is constant, with
+absolute value of $\sqrt{\mu a(1-\epsilon^2)}$.
+}
+
+\newpage
+
+{\isob 3. Compare different anomalies: $E$, $f$, $M$} \ (ano\_demo.pro)
+
+Using the previous results, you can choose equally spaced $M$ values,
+and calculate the corresponding $E$. From $E$ you can obtain $f$,
+with the formulas derived in lectures
+\begin{eqnarray}
+\cos f &=& \frac{\cos E - \epsilon}{1-\epsilon \cos E}, \\ \\ \nonumber
+\sin f &=& \frac{\sqrt{1-\epsilon^2} \sin E}{1-\epsilon \cos E},
+\end{eqnarray}
+\noindent and using the IDL arctan-function with two arguments,
+$f=${\bf atan(sin f, cos f)}.
+Make plots showing $E$ and $f$ vs. $M$ for different eccentricities.
+
+Plot also $E-M$ and $f-M$ vs. $M$, and compare the differences to
+the first terms of series expansions
+\begin{eqnarray}
+E &=& M + \epsilon \sin M + \epsilon^2 (\frac{1}{2} \sin 2M) + \epsilon^3 (\frac{3}{8} \sin 3M - \frac{1}{8} \sin M) + ..., \\ \nonumber
+f &=& M + 2 \epsilon \sin M + \epsilon^2 (\frac{5}{4} \sin 2M) + \epsilon^3 (\frac{13}{12} \sin 3M - \frac{1}{4} \sin M) + ...
+\end{eqnarray}
+
+\newpage
+
+{\isob 4. Numerical evaluation of time averages} \ (aver\_demo.pro)
+
+In the lectures (exercise I.7) the time averages of various functions
+(e.g. $<r>,\ <v^2>)$) were evaluated analytically, by utilizing a change
+of variables from time to either eccentric anomaly or to true anomaly.
+Make the same numerically, utilizing the fact that
+\begin{equation}
+<x> = \frac{1}{2\pi} \int_0^{2\pi} x(m) \ dM
+\end{equation}
+\noindent which can be numerically evaluated as
+\begin{equation}
+<x> = \frac{1}{n} \sum x(M_i), \ \  M_i = i \ (2\pi/n),\ \ i=0,..., n-1
+\end{equation}
+\noindent Do this for quantities $r,r^2,1/r,1/r^{-2},1/r^{-3},v^2$,
+for different eccentricities, and compare to analytic formulas derived in exercise I.7:
+
+
+
+%\begin{equation}
+%<r> = a(1+\epsilon^2/2),  \ \  <r^2> =a^2(1+3 \epsilon^2/2),  \ \ <1/r> = 1/a
+%\end{equation}
+%\begin{equation}
+%<1/r^2> = 1/a^2 (1-\epsilon^2)^{-1/2}, \ \ <1/r^3> = 1/a^3 (1-\epsilon^2)^{-3/2}, \ \ <v^2> = \mu/a
+%\end{equation}
+
+
+\begin{eqnarray}
+<r> &=& a(1+\epsilon^2/2),  \nonumber \cr
+<r^2> &=& a^2(1+3 \epsilon^2/2), \nonumber \cr
+<1/r> &=& 1/a, \nonumber \cr \cr
+<1/r^2> &=& 1/a^2 (1-\epsilon^2)^{-1/2},\nonumber \cr
+<1/r^3> &=& 1/a^3 (1-\epsilon^2)^{-3/2},\nonumber \cr \cr
+<v^2> &=& \mu/a\nonumber
+\end{eqnarray}
+
+
+
+%-------------------------------------------------------------------------
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
