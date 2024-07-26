@@ -1,0 +1,614 @@
+\documentclass[a4paper,12pt]{article}
+%\usepackage[pdftex]{graphicx} 
+%\usepackage{indentfirst}
+%\usepackage[varg]{txfonts}
+%\usepackage{times} 
+%\usepackage{colortbl}
+%\usepackage{amsmath}
+%\usepackage{amssymb}
+
+%\usepackage[T1]{fontenc}
+%\usepackage[finnish]{babel}
+
+
+%\usepackage[pdftex]{geometry}  %resizing headers
+%\usepackage[pdftex]{thumbpdf}  %create thumbnails
+\usepackage[pdftex]{graphicx}
+\usepackage{times}             %fonts
+%\usepackage[pdftex,bookmarks]{hyperref}
+%\usepackage[verbose]{layout}
+\usepackage{ifthen}
+\usepackage{colortbl}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[finnish]{babel}
+
+
+
+\topmargin=-0.9cm
+\oddsidemargin=0.0cm
+\evensidemargin=0.0cm
+\addtolength{\textheight}{0.5cm}
+
+
+\definecolor{LemonChiffon}{rgb}{1.,0.98,0.8}
+\definecolor{Gold}{rgb}{1.,0.84,0.}
+\definecolor{darkblue}{rgb}{0.25,0.,0.95}
+\definecolor{lightblue}{rgb}{0.4,0.65,0.95}
+\definecolor{grayred}{rgb}{0.7,0.,0.} 
+\definecolor{red2}{rgb}{1.0,0.5,0.} 
+\definecolor{LemonChiffon}{rgb}{1.,0.98,0.8}
+\definecolor{Gold}{rgb}{1.,0.84,0.}
+\definecolor{darkblue}{rgb}{0.25,0.,0.95}
+\definecolor{lightblue}{rgb}{0.4,0.65,0.95}
+\definecolor{RGBblack}{rgb}{0.0,0.0,0.0} 
+\def\red{\color{red}}
+\def\green{\color{green}}
+\def\white{\color{white}}
+\def\white{\color{LemonChiffon}}
+%\def\blue{\color{lightblue}}
+\def\blue{\color{RGBblack}}
+\def\gold{\color{Gold}}
+\def\black{\color{RGBblack}}
+
+
+
+\def\pp{\mathaccent "7F }
+\def\p{\mathaccent 95 }
+
+
+
+\def\sini {\sin i}
+\def\cosi {\cos i}
+
+\def\sino {\sin \Omega}
+\def\coso {\cos \Omega}
+
+\def\sinw {\sin \omega}
+\def\cosw {\cos \omega}
+
+
+
+\begin{document}
+\font\norm=cmr12
+\font\hugeb=cmb22
+\font\isob=cmb18
+\font\iso=cmr18
+\font\med=cmr14
+\font\medb=cmb14
+\baselineskip 0.6cm
+\parskip\medskipamount
+\parskip 0.05cm
+\parindent 5mm
+
+%\boldmath
+
+\norm
+\hsize 16cm
+\vsize 30cm
+
+\def\pii{\tilde{\omega}_\circ}
+
+\newcommand{\VV}{$\vec V$ \hskip 0.1cm}
+\newcommand{\RR}{$\vec R$ \hskip 0.1cm}
+
+\newcommand{\VVE}{\vec V}
+\newcommand{\RRE}{\vec R}
+
+
+\newcommand{\tsub}[2]{#1_{\mbox{\tiny #2}}}
+\newcommand{\psig}{\frac{\partial p}{\partial \sigma}}
+\newcommand{\dchi}{\frac{\partial }{\partial \chi}}
+\newcommand{\dtheta}{\frac{\partial }{\partial \theta}}
+\newcommand{\ddchi}{\frac{\partial^2 }{\partial \chi^2}}
+
+\newcommand{\bul}{$\bullet \ \ $}
+\newcommand{\buu}{\hskip 0.5cm}
+\newcommand{\buv}{\hskip 1.25cm}
+\newcommand{\arrow}{$\Rightarrow \ \ $}
+\newcommand{\barrow}{\hskip 0.5cm $\Rightarrow \ \ $}
+\newcommand{\larrow}{\hskip 0.5cm $\Leftarrow \ \ $}
+\newcommand{\hlin}{\vskip 0.2cm}
+\newcommand{\hpar}{\vskip 0.4cm}
+\newcommand{\nin}{\noindent}
+\def\pii{\tilde{\omega}_\circ}
+\def\ppder{\mathaccent "7F }
+\def\pder{\mathaccent 95 }
+\def\sini {\sin i}
+\def\cosi {\cos i}
+
+\def\sino {\sin \Omega}
+\def\coso {\cos \Omega}
+
+\def\sinw {\sin \omega}
+\def\cosw {\cos \omega}
+
+
+\newcommand{\sbul}{\scriptsize $\bullet$} 
+
+\newcommand{\beq}{\begin{eqnarray}}
+\newcommand{\eeq}{\end{eqnarray}}
+\newcommand{\prob}{{\rm prob}}
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\pdpd}[2]{\frac{\partial^2 #1}{{\partial #2}^2}}
+\newcommand{\ppd}[3]{\frac{\partial #1}{\partial #2 \partial #3}}
+
+\def\pii{\tilde{\omega}_\circ}
+%\def\ä{\"a}
+%\def\Ä{\"A}
+%\def\ö{\"o}
+%\def\Ö{\"O}
+
+\def\sx{{\sigma_x}}
+\def\sy{{\sigma_y}}
+\def\sx2{{\sigma_x}^2}
+\def\sy2{{\sigma_y}^2}
+
+\def\me{$M_{Earth}$}
+\def\msun{$M_{Sun}$}
+\boldmath
+
+
+\def\kvec{{\vec K}}
+\def\evec{{\vec e}}
+\def\rvec{{\vec R}}
+\def\vvec{{\vec V}}
+\def\ovec{{\vec \omega}}
+\def\rpvec{\pder {\vec R}}
+\def\rppvec{\ppder {\vec R}}
+\def\rtvec{{{\vec R}^\prime}}
+
+\def\dt{\Delta t}
+\def\ddt{{(\Delta t)}^2}
+\def\dddt{{(\Delta t)}^3}
+\def\half{\frac{1}{2}}
+\def\sixth{\frac{1}{6}}
+
+
+
+
+%\pagestyle{empty}
+{\centerline{}
+
+
+
+
+{\norm
+\vskip 0cm
+{{\centerline { {\isob CELESTIAL MECHANICS (Fall 2012): }}}}
+\vskip 0.2cm
+{{\centerline { {\isob COMPUTER EXERCISES III}}}}
+
+{{\centerline { { (Heikki Salo 26.11.2012)}}}}}
+
+\vskip 2cm
+
+{\medb 8. Numerical integration of 2-body relative orbit}
+
+\buv Using I and II order Taylor series
+
+\buv Using Runge-Kutta 4 method
+
+
+\vskip 1cm
+
+%Example routines can be copied from
+
+%$\sim$hsalo/TM2006$\_$DEMO3.dir
+
+
+
+\newpage
+
+{\medb 8. Numerical integration of 2-body relative orbit}
+
+\hpar
+
+\bul Dynamical equation for two-body relative motion,
+
+\hskip 6cm {\blue 
+$$ \ppder {\vec R} = -G(m_1+m_2) \frac{\vec R}{r^3} = -\mu \frac{\vec R}{r^3}$$
+}
+
+
+\bul General principle: divide the second order differential equation for radius vector $\rvec$ 
+
+\buu into two first order differential equations for vectors $\rvec$ and $\vvec${\blue  
+\beq
+\pder {\vec R} &=& \vec V \nonumber \\
+\pder {\vec V} &=& \ppder {\vec R} \nonumber
+\eeq
+}
+
+\bul Choose a Cartesian coordinate system $\rvec = [x,y,z]$, $\vvec=[v_x,v_y,v_z]$
+
+\buu In component form:  \hskip 2cm {\blue ($r=\sqrt{x^2+y^2+x^2}$)})
+{\blue
+\beq
+\pder x &=& v_x  \nonumber \cr
+\pder y &=& v_y  \nonumber \\
+\pder z &=& v_z  \nonumber \\
+{\pder v}_x &=& \ppder x \hskip 1cm = ~~ -\mu~ x/r^3  \nonumber \cr
+{\pder v}_y &=& \ppder y \hskip 1cm = ~~ -\mu~ y/r^3 \nonumber \cr
+{\pder v}_z &=& \ppder z \hskip 1cm = ~~ -\mu~ z/r^3 \nonumber
+\eeq}
+
+\bul This is an {\em initial value problem (alkuarvoprobleema) }: position, velocity known 
+
+\buu at a given instant of time  \barrow orbit for any desired time interval.
+
+\buu 6 initial values needed
+
+\hpar
+\hpar
+
+\bul We next look at some simple methods for the solution of this problem:
+
+\buu truncated Taylor expansions, Leap-frog method, RK4
+
+\newpage
+
+
+
+{\bf \red \large A. ~ First order truncated Taylor expansion:} 
+
+\buu \buu {\blue $f(t+\Delta t)= f(t) +f'(t) \Delta t$}  
+
+
+\hpar
+\hpar
+\bul Simplest possible method of solution for any first order differential equation
+\hlin 
+
+\buu 
+i) at time {\blue $t=t_o$} the position {\blue $[x_0, y_0, z_0]$} and velocity {\blue $[(v_x)_0, (v_y)_0, (v_z)_0]$}
+\hlin 
+\buu ii) Approximation at time {\blue $t_1=t_0+\Delta t$: }
+{\blue
+\beq 
+x_1 &=& x_0 + \pder x~ \dt  \hskip 3cm  ~~~~~~\pder x =  (v_x)_0 \nonumber \cr
+y_1 &=& y_0 + \pder y~ \dt  \hskip 3cm  ~~~~~~\pder y =  (v_y)_0 \nonumber \cr
+z_1 &=& z_0 + \pder z~ \dt  \hskip 3cm  ~~~~~~\pder z =  (v_z)_0 \nonumber \cr
+(v_x)_1 &=& (v_x)_0 + \pder {v_x}~ \dt \hskip 3.3cm  \pder {v_x} = \ppder x_0= ~-\mu  ~x_0/{r_0}^3 \nonumber \cr
+(v_y)_1 &=& (v_y)_0 + \pder {v_y}~ \dt \hskip 3.3cm  \pder {v_y} = \ppder y_0= ~-\mu  ~y_0/{r_0}^3  \nonumber \cr
+(v_z)_1 &=& (v_z)_0 + \pder {v_z}~ \dt \hskip 3.3cm  \pder {v_z} = \ppder z_0= ~-\mu ~ z_0/{r_0}^3  \nonumber
+\eeq }
+\buv \buv  {\small (NOTE: derivatives evaluated at $t_0$ \barrow must use $r_0=\sqrt{{x_0}^2+{y_0}^2+{z_0}^2}$) 
+
+\hskip 11cm in velocity derivatives}
+\hlin
+
+\buu iii) Repeat the step ii) for the next time steps {\blue $t_i \rightarrow t_i+\Delta t$},
+
+\buv until the whole desired time interval is covered
+
+\hpar \bul Easy to program, extremely inaccurate
+
+\buv error/step proportional to $\ddt$
+
+\buv at the time interval $t_{tot}$ one needs $t_{tot}/\dt$ steps
+
+\buu \barrow (in the worst case) the total error proportional to $\dt$
+
+\hlin
+
+\buu {\red \barrow NEVER USED!}  {\scriptsize (except in initial tests)}
+
+
+
+
+\newpage
+
+
+{\bf \large \red B.~ Second order Taylor expansion:} 
+
+\buu \buu {\blue $f(t+\Delta t)= f(t) +f'(t) \dt + \half f''(t) \ddt$}
+\hpar
+
+\hpar
+\buu Approximation at time {\blue $~t_1=t_0+\Delta t$: }
+{\blue
+\beq 
+x_1 &=& x_0 + \pder x~ \dt +\half \ppder x~ \ddt \nonumber \cr 
+y_1 &=& y_0 + \pder y~ \dt +\half \ppder y~ \ddt  \nonumber \cr 
+z_1 &=& z_0 + \pder z~ \dt +\half \ppder z~ \ddt  \nonumber \cr 
+(v_x)_1 &=& (v_x)_0 + \pder {v_x}~ \dt +\half {\ppder v}_x~ \ddt \nonumber \cr
+(v_y)_1 &=& (v_y)_0 + \pder {v_y}~ \dt +\half {\ppder v}_y~ \ddt \nonumber \cr
+(v_z)_1 &=& (v_z)_0 + \pder {v_z}~ \dt +\half {\ppder v}_z~ \ddt \nonumber
+\eeq
+}
+\buu Here {\blue ${\ppder v}_x = \dddot{x}$}, {\blue${\ppder v}_y = \dddot{y}$}
+and {\blue ${\ppder v}_z = \dddot{z}$}.
+
+\hlin
+\bul How to construct $\dddot{\vec R}_0 \equiv [\dddot{x_0},\dddot{y_0}, \dddot{z_0}]$?
+\hlin
+
+\buu Obtain $\ddot{\vec R}$ by differentiating $-\mu {\vec R}/r^3$ \barrow
+{\blue
+$$\dddot{\vec R} = d/dt~(\ddot{\vec R})= -\mu \frac{\dot{\vec R}r^3 -3r^2 \dot{r} \vec{R}}{r^6} = -\mu/r^3 \left(\dot{\vec R} - 3 \frac{(\rvec \cdot\rpvec) \rvec}{r^2}\right),$$,
+
+\buu {\small  $\pder r$ is calculated using the formula $r^2= \rvec \cdot \rvec$ \barrow $d(r^2)/dt = 2 r \pder r \equiv 2 \rvec \cdot \rpvec$ }
+\hpar
+}
+\bul In the component form
+{\blue \small
+\hlin
+
+\buv \buu  $\dddot{x}=  -\mu/r^3 \left( v_x - 3 \frac{(\rvec \cdot\rpvec)}{r^2} x\right)$
+\hskip 4cm $\rvec  \cdot \rpvec = x v_x + y v_y  + z v_z$
+
+\buv \buu $\dddot{y}=  -\mu/r^3 \left( v_y - 3 \frac{(\rvec \cdot\rpvec)}{r^2} y\right)$
+\hskip 4cm $r = \sqrt{x^2 + y^2  + z^2}$
+
+\buv \buu $\dddot{z}=  -\mu/r^3 \left( v_z - 3 \frac{(\rvec \cdot\rpvec)}{r^2} z\right)$
+}
+
+\hlin
+
+\bul The error/step is proportional to $(\dt)^3$ 
+
+\buu (worst case total
+error proportional to $\ddt$)
+
+ \barrow allows longer steps than the first order Taylor expansion, still not very good
+
+
+\newpage
+
+
+{\large \red \bf C.~  Higher order Taylor expansions:} 
+
+\buu \buu {\blue $f(t+\dt)= f(t) + \sum \frac{1}{k!} f^{(k)}(t) (\Delta t)^k$}
+
+\hlin
+
+\hpar
+\bul In practice the II order method is far too inaccurate
+
+\buu \barrow  higher order methods (e.g. 8th order etc.)
+\hlin
+
+\bul Calculation of higher order derivatives of $\ddot{\vec R}$ gets rapidly
+very cumbersome
+
+\barrow tabulated $f$ and $g$ series:  
+\hpar
+\buv {\blue $\rvec (\tau) = f(\tau, \rvec_0,  \rtvec_0) ~ \rvec_o + g(\tau, \rvec_0, \rtvec_0) ~ \rtvec_0$}
+\hlin
+\buv {\blue $\vvec (\tau) = \pder f(\tau, \rvec_0,  \rtvec_0) ~ \rvec_o + \pder g(\tau, \rvec_0, \rtvec_0) ~ \rtvec_0$}
+\hpar
+{\small
+\buu where
+
+\buv $\tau \equiv \sqrt{\mu} (t-t_0)$  and
+
+\buv $^\prime$ denotes differentiation with respect to normalized time
+
+\buv \buv ($d/dt = (d/d\tau) (d\tau/dt) = \sqrt{\mu} ~d/d\tau$)
+
+\buv $f= 1- \half {\tau}^2 {r_0}^3 +\half {\tau}^3 {r_0}^{-4}{r_0}^\prime ...$
+
+\buv $g= \tau  - \frac{1}{6} \tau^3 {r_0}^{-3} ...$
+
+\buv  (here truncated with the accuracy that corresponds to II order Taylor
+expansion}
+
+
+\hpar
+
+\newpage
+{\red \bf D 'TIME-CENTERED LEAPFROG'}
+
+\hlin
+\bul A method sometimes used in N-body simulations: the accuracy corresponds to second 
+
+\buu degree Taylor expansion,  but the method does not require the calculation of $\dddot
+{\rvec} = \dot{\vec F}$
+
+\hlin
+
+\bul The positions and velocities are approximated with formulas which are
+
+\buu symmetric with respect to time ({\em time-centered})
+
+
+\buu For example, the $x$ component ($y$ and $z$ are treated in a similar manner)
+{\blue
+\beq
+v_x(t+\dt/2) &=&v_x(t-\dt/2) + f_x(t) \dt \nonumber \\
+x(t+\dt)&=&x(t)+ v_x(t+\dt/2) \dt  \nonumber
+\eeq
+}
+%
+
+{\buv   \small It is easy to see that the accuracy corresponds to II degree Taylor:
+
+\buv  write the Taylor expansions
+\beq
+v_x(t+\dt/2) = v_x(t) + f_x(t) \dt/2  + \frac{1}{2} \pder f_x(t) (\dt/2)^2 \nonumber \\
+v_x(t-\dt/2) = v_x(t) - f_x(t) \dt/2  + \frac{1}{2} \pder f_x(t) (\dt/2)^2 \nonumber
+\eeq
+%
+\buv \buv subtract the latter from the first \barrow
+%
+\beq
+v_x(t+\dt/2) - v_x(t-\dt/2) =  f_x(t) \dt ~ + ~ ... \dt^3 \nonumber
+\eeq
+%
+
+\buv leads to leapfrog formula, with an error term proportional to $\dt^3$
+
+\buv Same accuracy holds for the position vector components}
+\hlin
+
+
+\newpage
+\large {\red \bf E. ~ Fourth order Runge-Kutta method (RK4)}
+\hlin
+\bul A method accurate to $(\dt)^4$, without the need to calculate explicitly the 
+
+\buu the higher order derivatives of force.
+
+\bul The accuracy is achieved by evaluating the forces in 4 different
+intermediate steps.
+\hlin
+\bul Assume that\buu  $dx/dt=f(t,x)$, then
+\hlin
+{\blue
+\buv $x(t+\dt) = x(t)+ \frac{\dt}{6} (k_1+2k_2+2k_3+k_4)$ where
+\hlin
+
+\buv \buv $k_1= f(t, x(t))$
+
+\buv \buv $k_2= f(t +\frac{\dt}{2}, x(t)+\frac{\dt}{2}k_1)$
+
+\buv \buv$k_3= f(t +\frac{\dt}{2}, x(t)+\frac{\dt}{2}k_2)$
+
+\buv \buv$k_4= f(t +\dt, x(t)+\dt k_3)$
+}
+\hpar
+
+\buu In practice most programming packages have subroutines
+for these steps
+
+\bul IDL contains a library-routine RK4: to use it one needs to 
+
+\buu - collect the components of $\rvec$ and $\vvec$ into a single variable
+
+\buv   to be integrated, say, $yy=[x,y,z,vx,vy,vz]$
+
+\buu - make a loop over time steps, calling RK4 at each step for updating the variable $yy$
+
+\buu - provide a function routine for returning the derivatives of $yy$
+
+\hpar
+
+{\small
+\baselineskip 0.19cm
+-------------------------------------------
+
+\buv variable yy=[x,y,z,vx,vy,vz] integrated over the step dt
+
+\buv func(time,yy) returns the derivate of yy  (=[dx/dt,dy/dt,dz/dt,d(vx)/dt,d(vy)/dt, d(vz)/dt])
+
+\hlin
+
+-------------------------------------------
+
+ \buu time=0.
+
+ \buu for i=0,n do begin
+
+ \buv  dydx=func(time,yy)
+
+ \buv   res=rk4(yy,dydx,time,dt,'func',/double)
+
+ \buv   time=time+dt
+
+ \buv   yy=res
+
+ \buu endfor
+
+-------------------------------------------
+
+\hpar
+
+\buu function func,t,yy
+
+\buv x=yy(0) \& y=yy(1) \& z=zz(2) \& vx=yy(3) \& vy=yy(4) \& vz=yy(5) 
+
+\buv ...
+
+\buv dydx=yy*0.
+
+\buv dydx(0)= ...
+
+\buu return,dydx
+
+\buu end
+}
+\newpage
+
+
+{\red WHAT TO DO?} \hskip 1cm 
+
+
+\bul Make a program to numerically integrate the 2-body relative motion.
+Also compare to analytical solution, and check the conservation of
+energy and angular momentum.
+
+
+\hlin
+\bul Analytical solution: Choose values for the orbital elements: $a, \epsilon, t_0 $. Also, set the units by choosing $\mu=G(m_1+m_2) = 1$. The orbital period
+$P= 2\pi \sqrt{a^3/\mu}$ ~(therefore if $\mu=1$ \barrow  $P=2\pi$ at the unit distance)
+
+\buu Solve Kepler's equation $t$:
+
+{\blue
+\buv $M= 2\pi \frac{t-t_0}{P}$
+
+\buv $M= E- \epsilon \sin E$
+}
+
+\buu Position and velocity ($b=a \sqrt{1-\epsilon^2}$)
+
+{\blue
+\buv $x= a (\cos E - \epsilon)$
+
+\buv $y= b \sin E$
+
+\buv $z= 0$
+
+\buv $v_x= -a \sin E ~ \sqrt{\mu/a^3} ~(1-\epsilon \cos E)^{-1}$
+
+\buv $v_y= ~~ b \cos E ~ \sqrt{\mu/a^3} ~(1-\epsilon \cos E)^{-1}$
+
+\buv $v_z=  0$
+}
+
+\buu At $t=t_0$ \barrow $M=0, E=0$ \barrow $[x_0,y_0,0]$, $[{v_x}_0,{v_y}_0,0]$
+
+\hpar
+
+\bul Numerical solution: 
+
+\buu Integrate the orbit numerically for times
+$t=t_0 + i ~~ \dt $, $~~i=0,1,2,...$. 
+
+\buu Use the analytical solution for the
+calculation of initial values.
+
+\buu Compare to analytical solution evaluated for the same times
+
+\buu Check the energy and angular momentum
+
+
+
+\buv $h= \half v^2 -\mu/r$
+
+\buv $|\vec k|= (\rvec \times \vvec)_z = x v_y-y v_x$
+
+
+
+
+\bul Compare I and II order Taylor expansions, RK4, 
+
+\buu using different time steps
+(for example $\dt=0.1, 0.01, 0.001$ orbital periods).
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+

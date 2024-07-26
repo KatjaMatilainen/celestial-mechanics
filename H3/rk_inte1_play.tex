@@ -1,0 +1,549 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{indentfirst}
+\usepackage{amsmath} 
+\usepackage[varg]{txfonts}
+\usepackage{colortbl}
+\topmargin=-0.75cm
+\oddsidemargin=0.0cm
+\evensidemargin=0.0cm
+
+\definecolor{PastellGreen}{rgb}{0.5,0.8,0.6}
+\definecolor{DarkGreen}{rgb}{0.0,0.9,0.0}
+\definecolor{RGBblack}{rgb}{0.0,0.0,0.0} 
+\definecolor{gray}{rgb}{0.3,0.3,0.3} 
+\definecolor{lightgray}{rgb}{0.9,0.9,0.9} 
+\definecolor{grayred}{rgb}{0.7,0.,0.} 
+\definecolor{red2}{rgb}{1.0,0.5,0.} 
+\definecolor{LemonChiffon}{rgb}{1.,0.98,0.8}
+\definecolor{Gold}{rgb}{1.,0.84,0.}
+\definecolor{darkblue}{rgb}{0.25,0.,0.95}
+\definecolor{lightblue}{rgb}{0.4,0.65,0.95}
+\def\red{\color{red}}
+\def\green{\color{green}}
+\def\white{\color{white}}
+\def\white{\color{LemonChiffon}}
+\def\blue{\color{lightblue}}
+\def\gold{\color{Gold}}
+\def\black{\color{RGBblack}}
+
+
+\newcommand{\sverb}{\begin{verbatim}}
+\newcommand{\everb}{\end{verbatim}}
+
+\baselineskip 0.0cm
+\begin{document}
+\scriptsize
+
+
+
+\small
+\begin{verbatim}
+
+--------------------------
+EXAMPLES OF USING RK_INTE1
+--------------------------
+
+- rk_inte1.pro:
+  rk4-integration (or Taylor-series) of 2-body orbit
+  for given orbital elements and time interval 
+  checks the conservation of orbital elements
+                -"-          angular momentum L
+                -"-          energy E
+  plots the orbit + analytial solution
+- prints the following instruction when called without parameters:
+  IDL> rk_inte1
+
+\end{verbatim}
+\scriptsize
+\begin{verbatim}
+-----------------------------------------------------------------------------
+pro rk_inte1,elem,t1,t2,dt,output=output,plot=plot
+-----------------------------------------------------------------------------
+Cartesian integration of non-perturbed 2-body orbit HS 20.11.02/12.02.06
+  elem=[a,e,i,ome,w,tau]  initial orbital elements
+  t1,t2                   integration time interval (in orbital periods)
+  dt                      time step (in orbital periods)
+KEYWORDS:
+-----------------------------------------------------------------------------
+  myy                     G * (m1+m2)   def=1.
+  taylor=choice           use Taylor series, with degree=taylor (def=rk4)
+                          choices=  1, 2               explicitly written                   
+                                   -1,-2,-3,-4,-5,-6   using f,g-series
+-----------------------------------------------------------------------------
+PLOTTING KEYWORDS:
+  plot=istep              plot every istep steps (def=no plot)
+  oplot=color             plot on top of previous orbit with
+                          color=oplot+2 (i.e 1->col=3=green)
+  /connect                -> connect orbit points in the plot (def=no)
+  wid                     limit of the plot region (DEF=1.25 a)
+  /cplot                  plot analytic solution (white squares)
+  title                   -> plot title
+  output=val              output interval of ELEM,L,E in steps (def=nsteps/10)
+                          val=negative -> just store
+-----------------------------------------------------------------------------
+OUTPUT/STORE KEYWORDS:
+  t_out,l_out,e_out       dL/L and dE/E vs t_out (stored every |output| step)
+  x_out,y_out,z_out       positions
+  vx_out,vy_out,vz_out    velocities
+  dl,de                   return averaged change in dL/L and dE/E
+                                                    /orbit period
+  /silent                 -> do not print anything to terminal
+-----------------------------------------------------------------------------
+EXAMPLE INPUT VALUES:
+  /example                example of integration:
+                          a=1,ecc=0.5,i=10,ome=90.,w=0,tau=0
+                                 t1=0, t2=10*TORB, dt=0.01*TORB
+  rk_inte1,elem,t1,t2,dt,/example,/plot
+-----------------------------------------------------------------------------
+\end{verbatim}
+
+\small
+\newpage
+
+\black
+\begin{verbatim}
+
+;--------------------------------------------------
+;1) Start by trying the /example values
+;--------------------------------------------------
+\end{verbatim}
+\red
+\begin{verbatim}
+    rk_inte1,elem,t1,t2,dt,/example,/plot
+\end{verbatim}
+\black
+\begin{verbatim}
+; -plots an orbit integrated for 10 periods 
+; -prints a table of orbital elements at different times
+;  as well as dL/L, dE/E
+; -and has also given values to variables: elem,t1,t2,dt
+
+;  Check what are the example values of the orbital elements:
+\end{verbatim}
+\red
+\begin{verbatim}
+    print,elem            ;elem=[a,e,i,ome,w,tau]
+    print,t1,t2,dt        ;in orbital periods
+\end{verbatim}
+\black
+\begin{verbatim}
+;Why does the orbit look like it does?
+
+;--------------------------------------------------
+;  same integrated orbit with small white squares=analytical orbit
+\end{verbatim}
+\red
+\begin{verbatim}
+    rk_inte1,elem,t1,t2,dt,/example,/plot,/cplot
+\end{verbatim}
+\black
+\begin{verbatim}
+;----------------------------------------------------------------------------
+;2) Try now the same orbital elements (omit /example from the call)
+;   with larger timesteps (The previous example had dt=0.01)
+;   with oplot=1,2,3,... orbits from different calls are plotted on the same plot
+\end{verbatim}
+\red
+\begin{verbatim}
+     rk_inte1,elem,t1,t2,0.01,/plot,/cplot,/connect
+     rk_inte1,elem,t1,t2,0.02,/plot,oplot=1,/connect
+     rk_inte1,elem,t1,t2,0.03,/plot,oplot=3,/connect  ;starts to look bad?
+     rk_inte1,elem,t1,t2,0.05,/plot,oplot=4,/connect  ;escape!
+\end{verbatim}
+\black
+;remember: to get rid of windows use \red wide
+
+\newpage
+\black
+\begin{verbatim}
+
+;-------------------------------------------------------------------------------
+;3) The integration thus gets progressively more inacurate with increasing time-step
+;   Let's look how the error increases with time
+;   t_out, e_out, l_out keywords return   dL/L and dE/E vs. time
+;   output determines storing interval in steps
+;   output=negative -> does not print to terminal
+
+;3a) A short time interval (three orbits),
+;    storing dL/L and dE/E at every step 
+\end{verbatim}
+\red
+\begin{verbatim}
+     !p.multi=[0,2,2]
+     rk_inte1,elem,0.0,3.0,0.001,/plot,t_out=t_out,e_out=e_out,l_out=l_out,output=-1
+     plot,t_out,e_out,psym=-4,xtitle='T/PER',ytitle='dE/E',title='dt=0.001 EKS=0.5'
+     plot,t_out,l_out,psym=-4,xtitle='T/PER',ytitle='dL/L'
+     !p.multi=0
+\end{verbatim}
+\black
+\begin{verbatim}
+;On what part of the orbit  does the error mainly occur?
+;3b) Take a longer interval
+\end{verbatim}
+\red
+\begin{verbatim}
+     !p.multi=[0,2,2]
+     rk_inte1,elem,0.,10,0.01,/plot,t_out=t_out,e_out=e_out,l_out=l_out,output=-20
+     plot,t_out,e_out,psym=-4,xtitle='T/PER',ytitle='dE/E',title='dt=0.01,EKS=0.5'
+     plot,t_out,l_out,psym=-4,xtitle='T/PER',ytitle='dL/L'
+     !p.multi=0
+\end{verbatim}
+\black
+\begin{verbatim}
+
+;So, the overall error seems to increase linearly with time
+;However, this is true only when the orbit does not change too much
+;try larger dt=0.05   
+
+\end{verbatim}
+\red
+\begin{verbatim}
+     !p.multi=[0,2,2]
+     rk_inte1,elem,0.,10,0.05,/plot,t_out=t_out,e_out=e_out,l_out=l_out,output=4,/connect
+     plot,t_out,e_out,psym=-4,xtitle='T/PER',ytitle='dE/E',title='dt=0.05,EKS=0.5'
+     plot,t_out,l_out,psym=-4,xtitle='T/PER',ytitle='dL/L'
+     !p.multi=0
+
+\end{verbatim}
+\black
+\begin{verbatim}
+
+;why is there no accumulation of error in the end of this integration?
+
+;-----------------------------------------------------------------------
+;4) Let's plot the dL/L and dE/E (/per orbital period) versus timestep
+;   These are returned by 'dl' and 'de' keywords   
+;   Here is an example of how to do it compactly, without writing a procedure
+;   So, just copy lines with mouse and move to IDL window!
+
+\end{verbatim}
+\red
+\begin{verbatim}
+
+   dt_tab=[.01,.005,.0025,.001]*1.d0
+   dl_tab=dt_tab
+   de_tab=dt_tab
+
+   for i=0,n_elements(dt_tab)-1 do begin &  rk_inte1,elem,t1,t2,dt_tab(i),$
+       plot=1,oplot=i,dl=dl,de=de & dl_tab(i)=dl & de_tab(i)=de & endfor
+
+   nwin
+   plot,dt_tab,abs(dl_tab),psym=-4,xtit='DT',ytit='dE/E, dL/L (/orbit)',title='RK4'
+   oplot,dt_tab,abs(de_tab),psym=-6,col=2
+
+\end{verbatim}
+\black
+\begin{verbatim}
+
+;Error seems to increase very fast with time-step
+;Try with log-log plot:
+
+\end{verbatim}
+\red
+\begin{verbatim}
+
+  nwin
+  plot,dt_tab,abs(dl_tab),psym=-4,/xlog,/ylog,yr=[1d-15,1],xtit='DT',$
+       ytit='dE/E, dL/L (/orbit)',title='RK4'
+  oplot,dt_tab,abs(de_tab),psym=-6,col=2
+
+\end{verbatim}
+\black
+\begin{verbatim}
+
+;Errors seem to behave as dE/E = a * dt^k (which implies log(dE/E) = log(a)+k * log(dt)
+;Try to determine k, by overplotting various lines:
+
+\end{verbatim}
+\red
+\begin{verbatim}
+
+  oplot,dt_tab,dt_tab^2,col=3,lines=2
+  oplot,dt_tab,dt_tab^3,col=5,lines=2
+  oplot,dt_tab,dt_tab^4,col=6,lines=2
+  oplot,dt_tab,dt_tab^5,col=7,lines=2
+  oplot,dt_tab,dt_tab^6,col=8,lines=2
+
+\end{verbatim}
+\black
+\begin{verbatim}
+
+;Which curve seems to have the right slope?
+
+\end{verbatim}
+\red
+\begin{verbatim}
+
+  oplot,dt_tab,de_tab(0)*(dt_tab/dt_tab(0))^5,psym=-1,thick=3,sym=1,lines=2  
+  ; almost perfect?
+
+\end{verbatim}
+\black
+\begin{verbatim}
+;How does the result agree with the RK4 being a fourth-order method?
+
+
+;-----------------------------------
+;5) So, errors in dL/L and dE/E depends on timestep
+;   How does it depend on other things, like a and eks?
+
+
+;5a) try different semimajor-axis:
+
+\end{verbatim}
+\red
+\begin{verbatim}
+  elem1=[1.0,  0.5,   0.,  0.,  0.,  0.]		;elem=[a,e,i,ome,w,tau]
+  elem2=[2.0,  0.5,   0.,  0.,  0.,  0.]		;so a is changed from a=1 to a=2
+
+  dt=0.01
+  t1=0.
+  t2=10.
+
+  rk_inte1,elem1,t1,t2,dt,dl=dl1,de=de1,/plot,wid=4
+  rk_inte1,elem2,t1,t2,dt,dl=dl2,de=de2,/plot,oplot=1           
+  ;added /plot to check the change in orbit
+
+\end{verbatim}
+\black
+\begin{verbatim}
+; check the changes in E and L
+; Is there any difference?
+  
+\end{verbatim}
+\red
+\begin{verbatim}
+  print,'error dE/E', de1,de2 
+  print,'error dL/L', dl1,dl2
+
+
+\end{verbatim}
+\black
+\begin{verbatim}
+
+;5b) try different eccentricities:
+
+\end{verbatim}
+\red
+\begin{verbatim}
+
+  elem1=[1.0,  0.5,   0.,  0.,  0.,  0.]		;elem=[a,e,i,ome,w,tau]
+  elem2=[1.0,  0.05,   0.,  0.,  0.,  0.]		;so eks is reduced form eks=0.5 to eks=0.05
+
+  dt=0.01
+  t1=0.
+  t2=10.
+
+  rk_inte1,elem1,t1,t2,dt,dl=dl1,de=de1,/plot,wid=4
+  rk_inte1,elem2,t1,t2,dt,dl=dl2,de=de2,/plot,oplot=1 
+
+\end{verbatim}
+\black
+\begin{verbatim}
+; check the changes in E and L
+
+\end{verbatim}
+\red
+\begin{verbatim}
+
+  print,de1,de2
+  print,dl1,dl2
+
+\end{verbatim}
+\black
+\begin{verbatim}
+; So, how does the eccentricity affect?
+
+;5c) Let's try for a range of different values
+;    choose dt=0.001 to avoid too large changes with eks=0.9! 
+
+\end{verbatim}
+\red
+\begin{verbatim}
+
+   eks_tab=[.001,.01,.1,.25,.5,.75,.9,.95]*1.d0
+   dl_tab=eks_tab
+   de_tab=eks_tab
+   t1=0.
+   t2=10.
+   dt=0.001
+   output=1000   ; not to print so much
+  
+   for i=0,n_elements(eks_tab)-1 do begin &  rk_inte1,[1.,eks_tab(i),0.,0.,0.,0.],$
+       t1,t2,dt,plot=1,oplot=i,wid=5,output=output,dl=dl,de=de $
+       & dl_tab(i)=dl & de_tab(i)=de & endfor
+
+
+   nwin
+   plot,eks_tab,abs(dl_tab),/xlog,/ylog,psym=-4,xtitle='eccentricty',$
+        ytitle='error',yr=[1d-16,1.]
+   oplot,eks_tab,abs(de_tab),psym=-6,col=2
+
+\end{verbatim}
+\black
+\begin{verbatim}
+
+;so things get really bad when eccentricity is increased
+;try to look it this way
+
+\end{verbatim}
+\red
+\begin{verbatim}
+
+   nwin
+   plot,1.-eks_tab,abs(dl_tab),/xlog,/ylog,psym=-4,xtitle='1-eccentricty',$
+        ytitle='error',yr=[1d-16,10.]
+   oplot,1.-eks_tab,abs(de_tab),psym=-6,col=2
+
+\end{verbatim}
+\black
+\begin{verbatim}
+;approximative fit?
+
+\end{verbatim}
+\red
+\begin{verbatim}
+
+   apu=lindgen(100)*.01+.01
+   oplot,apu,1d-12/apu^8,lines=2,col=3
+
+\end{verbatim}
+\black
+\begin{verbatim}
+
+;Remembering the result in 3a) how would you intepret this stong eccentricity dependence?
+
+;just plotting the time evolution with EKS=0.9 and EKS=0.5
+
+\end{verbatim}
+\red
+\begin{verbatim}
+
+     elem1=[1.,0.9,0.,0.,0.,0.]
+     rk_inte1,elem1,0.0,3.0,0.001,/plot,$
+              t_out=t_out1,e_out=e_out1,l_out=l_out1,output=-1
+
+     elem2=[1.,0.5,0.,0.,0.,0.]
+     rk_inte1,elem2,0.0,3.0,0.001,/plot,oplot=1,$
+              t_out=t_out2,e_out=e_out2,l_out=l_out2,output=-1
+
+     !p.multi=[0,2,1]
+     nwin
+     plot,t_out1,e_out1,xtit='T/PER',ytit='dE/E',$
+          title='dt=0.001 EKS=0.9 (red) 0.1 (GREEN)',col=2,/ylog,yr=[1d-12,1]
+     oplot,t_out2,e_out2,col=3
+     plot,t_out1,-l_out1,xtit='T/PER',ytit='dL/L',col=2,/ylog,yr=[1d-12,1]
+     oplot,t_out2,-l_out2,col=3
+     !p.multi=0
+
+\end{verbatim}
+\black
+\begin{verbatim}
+;-----------------------------------------------------------------------------------
+;6 Let's now have a look at errors in Taylor-series integration
+;  keyword taylor defines the degree (1 or 2)
+
+     
+;6a) TAYLOR I
+
+\end{verbatim}
+\red
+\begin{verbatim}
+
+     elem=[1.,0.5,0.,0.,0.,0.]
+
+     dt=0.01
+     rk_inte1,elem,0.0,1.0,dt,/plot,output=-1,/cplot,taylor=1,$
+        title='Taylor I: dt=0.01, 0.001, 0.0001'    
+     ;terrible
+
+     dt=0.001
+     rk_inte1,elem,0.0,1.0,dt,/plot,output=-1,taylor=1,oplot=1 
+     ; bad
+
+     dt=0.0001
+     rk_inte1,elem,0.0,1.0,dt,/plot,output=-1,taylor=1,oplot=2 
+     ; still bad, has not completed one orbit!
+
+\end{verbatim}
+\black
+\begin{verbatim}
+;6b) TAYLOR II
+
+\end{verbatim}
+\red
+\begin{verbatim}
+     elem=[1.,0.5,0.,0.,0.,0.]
+
+     dt=0.01
+     rk_inte1,elem,0.0,1.0,dt,/plot,output=-1,/cplot,taylor=2,$
+         title='Taylor 2: dt=0.01, 0.001, 0.0001'    
+     ; bad
+
+     dt=0.001
+     rk_inte1,elem,0.0,1.0,dt,/plot,output=-1,taylor=2,oplot=1 
+     ; better
+
+     dt=0.0001
+     rk_inte1,elem,0.0,1.0,dt,/plot,output=-1,taylor=2,oplot=2 
+     ; almost acceptable
+
+
+\end{verbatim}
+\black
+\begin{verbatim}
+;-------------------------------------------
+;6c) Let's check the error vs. dt dependence, as we did for RK4
+
+;with taylor II
+;if this seems to take forever, remove the shortest time-step
+
+\end{verbatim}
+\red
+\begin{verbatim}
+
+   elem=[1.,0.5,0.,0.,0.,0.]
+   dt_tab=[.01,.001,.0001,.00001]*1.d0
+   dl_tab=dt_tab
+   de_tab=dt_tab
+   t1=0.d0
+   t2=2.d0
+
+   for i=0,n_elements(dt_tab)-1 do begin &  rk_inte1,elem,t1,t2,dt_tab(i),$
+       plot=0,oplot=i,dl=dl,de=de,tay=2 & dl_tab(i)=dl & de_tab(i)=de & endfor
+
+  nwin
+  plot,dt_tab,abs(dl_tab),psym=-4,/xlog,/ylog,yr=[1d-12,1],xtit='DT',$
+       ytit='dE/E, dL/L (/orbit)',title='TAylor II, EKS='+string(elem(1))
+  oplot,dt_tab,abs(de_tab),psym=-6,col=2
+
+
+\end{verbatim}
+\black
+\begin{verbatim}
+;again, check the exponent of DE/E vs dt^k dependence
+
+\end{verbatim}
+\red
+\begin{verbatim}
+  oplot,dt_tab,1d3*dt_tab^2,lines=2
+  oplot,dt_tab,1d3*dt_tab^3,lines=2
+
+\end{verbatim}
+\black
+\begin{verbatim}
+;Error proportional to dt^-3 ?  
+
+;------------------------------------
+;Repeat the same with eks=0.05
+;let's plot them on top of the previous error-curves
+
+\end{verbatim}
+\black
+
+
+
+\end{document}

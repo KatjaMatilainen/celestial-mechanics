@@ -1,0 +1,40 @@
+-----------------------------------------------------------------------------
+pro rk_inte1,elem,t1,t2,dt,output=output,plot=plot
+-----------------------------------------------------------------------------
+Cartesian integration of non-perturbed 2-body orbit HS 20.11.02/12.02.06
+  elem=[a,e,i,ome,w,tau]  initial orbital elements
+  t1,t2                   integration time interval (in orbital periods)
+  dt                      time step (orbital periods)
+KEYWORDS:
+-----------------------------------------------------------------------------
+  myy                     G * (m1+m2)   def=1.
+  taylor=choice           use Taylor series, with degree=taylor (def=rk4)
+                          choices=  1, 2               explicitly written                   
+                                   -1,-2,-3,-4,-5,-6   using f,g-series
+  dtorb =value            -> dt=period/dtorb
+-----------------------------------------------------------------------------
+PLOTTING KEYWORDS:
+  plot=istep              plot every istep steps (def=no plot)
+  oplot=color             plot on top of previous orbit with
+                          color=oplot+2 (i.e 1->col=3=green)
+  /connect                -> connect orbit points in the plot (def=no)
+  wid                     limit of the plot region (DEF=1.25 a)
+  /cplot                  plot analytic solution (white squares)
+  title                   -> plot title
+  output=val              output interval of ELEM,L,E in steps (def=nsteps/10)
+                          val=negative -> just store
+-----------------------------------------------------------------------------
+OUTPUT/STORE KEYWORDS:
+  t_out,l_out,e_out       dL/L and dE/E vs t_out (stored every |output| step)
+  x_out,y_out,z_out       positions
+  vx_out,vy_out,vz_out    velocities
+  dl,de                   return averaged change in dL/L and dE/E
+                                                    /orbit period
+  /silent                 -> do not print anything to terminal
+-----------------------------------------------------------------------------
+EXAMPLE INPUT VALUES:
+  /example                example of integration:
+                          a=1,ecc=0.5,i=10,ome=90.,w=0,tau=0
+                                 t1=0, t2=10*TORB, dt=0.01*TORB
+  rk_inte1,elem,t1,t2,dt,/example,/plot
+-----------------------------------------------------------------------------

@@ -1,0 +1,447 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4,landscape]{seminar}
+%\slidesmag{1}
+%\documentstyle[a4paper]{letter}
+%\documentstyle[fullpage]{letter}
+\usepackage{graphicx} 
+\usepackage{amsmath} 
+
+\usepackage{color}
+%\usepackage{pstcol} % To use the standard `color' package with Seminar
+%\usepackage{semcolor}
+%\usepackage{slidesec}
+%\input{seminar.bug}
+%\input{seminar.bg2} % See the Seminar bugs list
+%\usepackage{pst-grad}
+
+\definecolor{LemonChiffon}{rgb}{1.,0.98,0.8}
+\definecolor{Gold}{rgb}{1.,0.84,0.}
+\definecolor{darkblue}{rgb}{0.25,0.,0.95}
+\definecolor{lightblue}{rgb}{0.4,0.65,0.95}
+%\slideframe[\psset{fillstyle=gradient,gradmidpoint=0.0,
+%                   gradbegin=lightblue,gradend=darkblue}]{scplain}
+
+\def\pp{\mathaccent "7F }
+\def\p{\mathaccent 95 }
+
+
+\def\sini {\sin i}
+\def\cosi {\cos i}
+
+\def\sino {\sin \Omega}
+\def\coso {\cos \Omega}
+
+\def\sinw {\sin \omega}
+\def\cosw {\cos \omega}
+
+
+
+\begin{document}
+\font\norm=cmr12
+\font\hugeb=cmb22
+\font\isob=cmb18
+\font\iso=cmr18
+\font\med=cmr14
+\font\medb=cmb14
+\baselineskip 0.6cm
+\parskip\medskipamount
+\parskip 0.35cm
+\parindent 5mm
+
+%\boldmath
+
+\norm
+\hsize 16cm
+\vsize 30cm
+\newcommand{\bul}{$\bullet \ \ $}
+\newcommand{\buu}{\hskip 0.5cm}
+\newcommand{\arrow}{$\Rightarrow \ \ $}
+\newcommand{\barrow}{\hskip 0.5cm $\Rightarrow \ \ $}
+\newcommand{\larrow}{\hskip 0.5cm $\Leftarrow \ \ $}
+\newcommand{\hlin}{\vskip 0.5cm}
+\newcommand{\hpar}{\vskip 1.0cm}
+\newcommand{\nin}{\noindent}
+\def\pii{\tilde{\omega}_\circ}
+
+\newcommand{\VV}{$\vec V$ \hskip 0.1cm}
+\newcommand{\RR}{$\vec R$ \hskip 0.1cm}
+
+\newcommand{\VVE}{\vec V}
+\newcommand{\RRE}{\vec R}
+
+%\pagestyle{empty}
+{\centerline{}
+
+
+
+
+{\norm
+\vskip 0cm
+{{\centerline { {\isob CELESTIAL MECHANICS (Fall 2012): }}}}
+\vskip 0.2cm
+{{\centerline { {\isob COMPUTER EXERCISES II}}}}
+
+{{\centerline { { (Heikki Salo 2.11.2012)}}}}
+
+\vskip 2cm
+
+{\medb 5. Calculation of R and V from orbital elements:}
+
+{\medb 6. Calculation of orbital elements from R and V}
+
+{\medb 7. Playing with orbits}
+
+
+
+\vskip 1cm
+
+Example routines for the solution of the exercises can be copied from
+
+\begin{verbatim}
+/wrk/hsalo/TM2012_idl.dir/TM2012_DEMO2.dir
+\end{verbatim}
+
+
+
+\newpage
+
+%-------------------------------------------------------------------------
+\newpage
+{\isob 5. Calculation of \RR and \VV from orbital elements} \ (elem\_to\_rv.pro)
+
+The previous examples have dealt with elliptic motion in a coordinate
+system aligned with the orbital plane, with the x-axis pointing to
+the pericenter. Let's denote the Cartesian coordinates in this system by
+$\tilde x$ and $\tilde y$, and the velocities by $\tilde v_x$ and $\tilde
+v_y$. The calculation of these coordinates for a given time $t$ required
+just $a, \epsilon$ and $\tau$: the shape and size of the orbit is
+given by $\epsilon$ and $a$, while $\tau$ gave the instant of
+pericenter passage. 
+
+Here we calculate the position \RR and velocity \VV vectors with
+respect to a reference coordinate system (e.g. Earth's orbital plane,
+with the x-axis pointing to the vernal equinox), starting from the
+full set of orbital elements $(a, \epsilon, i, \Omega, \omega, \tau)$. The
+orientation of the planet's orbital plane is defined with $\Omega$ and
+$i$, the longitude of node with respect to a fixed direction along the
+xy-reference plane, and the inclination of the orbit, respectively.
+The orientation of the pericenter in the orbital plane is defined with
+$\omega$, the argument of pericenter, giving the angle of the
+pericenter from the nodal line (along the orbital plane).
+
+
+{\bf ELLIPTIC ORBIT: }
+The following steps are required (steps 1-3 were already
+needed in previous exercises, but are collected here to list a complete set of formulas):
+
+{\bf 1)} Calculate the period, and the mean anomaly $M$
+\begin{eqnarray}
+P &=& 2\pi \sqrt{a^3/\mu} \\ \nonumber
+M &=& \frac{2\pi}{P}(t-\tau)
+\label{period}
+\end{eqnarray}
+
+{\bf 2)} Solve the eccentric anomaly $E$ from Kepler's equation
+\begin{equation}
+M = E - \epsilon \sin(E)
+\end{equation}
+
+{\bf 3)} Calculate the orbital plane coordinates $\tilde x, \tilde y$ and $\tilde v_x, \tilde v_y$:
+\begin{eqnarray}
+{\tilde x} &=& a (\cos E - \epsilon) \\ \nonumber
+{\tilde y} &=& b  \sin E             \\ \nonumber 
+{\tilde v_x} &=& -a \sin E  ~~ \sqrt{\mu/a^3} \ (1-\epsilon \cos E)^{-1}    \\ \nonumber
+{\tilde v_y} &=&  ~~ b \cos E ~~ \sqrt{\mu/a^3} \  (1-\epsilon \cos E)^{-1}      \\ \nonumber
+\end{eqnarray}
+
+\newpage
+{\bf 4)} All the extra which needs to be done is to rotate the components of
+position and velocity to the reference system (of course $\tilde z=0$ and $\tilde v_z=0$ along the orbit):
+\begin{eqnarray}
+\vec R &=& \ \tilde x \left( \frac{\vec A}{a}\right) + \ \tilde y \left( \frac{\vec B}{b}\right) + \ \tilde z \vec N \\ \nonumber
+\vec V &=& \tilde v_x\left( \frac{\vec A}{a}\right)  + \tilde v_y \left( \frac{\vec B}{b}\right) + \ \tilde v_z \vec N
+\end{eqnarray}
+\noindent where the directions of $\vec A$, $\vec B$, and $N= \left( \frac{\vec A}{a}\right) \times \left( \frac{\vec B}{b}\right)$ in the reference system
+ (obtained by a rotation of the orbital plane-  coordinate system by $-\omega$ with respect to the z-axis, $-i$ with respect to the new x-axis, and by $-\Omega$ around the new z-axis) are given by:
+
+\begin{equation}
+\frac{\vec A}{a} = \begin{pmatrix} \cosw \coso - \sinw \sino \cosi \\ \cosw \sino + \sinw \coso \cosi \\ \sinw \sini \end{pmatrix}
+\end{equation}
+
+\begin{equation}
+\frac{\vec B}{b} = \begin{pmatrix} -\sinw \coso - \cosw \sino \cosi \\ -\sinw \sino + \cosw \coso \cosi \\ \cosw \sini \end{pmatrix}
+\end{equation}
+
+\begin{equation}
+\vec N = \begin{pmatrix} ~~\sino \sini \\ -\coso \sini \\ \cosi \end{pmatrix}
+\label{eq_n}
+\end{equation}
+
+\vskip 1cm
+{\bf HYPERBOLIC ORBIT:}
+The treatment of hyperbolic orbit can be incorporated to the same
+procedure: the only changes are in steps 2 and 3. In the case of hyperbolic
+orbit $(\epsilon > 1)$, the Kepler's equation is replaced by
+\begin{equation}
+ M = \epsilon \sinh E  - E
+\label{eq_kepler_hyp} 
+\end{equation}
+\noindent which can be solved with similar methods as in the elliptic case
+(see {\bf hkepler.pro}). 
+
+\newpage
+\noindent Instead of step 3 we have:
+\begin{eqnarray}
+{\tilde x} &=& a (\epsilon - \cosh E) \\ \nonumber
+{\tilde y} &=& b  \sinh E             \\ \nonumber 
+{\tilde v_x} &=& -a \sinh E ~~ \sqrt{\mu/a^3} \ (\epsilon \cosh E -1)^{-1}    \\ \nonumber
+{\tilde v_y} &=&  ~~ b \cosh E  ~~ \sqrt{\mu/a^3} \  (\epsilon \cosh E -1)^{-1},      \\ \nonumber
+\end{eqnarray}
+\noindent obtained from the vectorial representation of hyperbolic orbit:
+\begin{equation}
+\vec R = \vec A (\epsilon - \cosh E) + \vec B \sinh E
+\label{eq_vec_r_hyp}
+\end{equation}
+\begin{equation}
+\vec V =\p {\vec R} = (- \vec A \sinh E + \vec B \cosh E) \p E,
+\label{eq_vec_v_hyp}
+\end{equation}
+
+\noindent where $\p E$ is get from differentiating Eq. 
+\ref{eq_kepler_hyp}, giving
+\begin{equation}
+\p E = \frac{\sqrt{\mu/a^3}}{(\epsilon \cosh E -1)}
+\label{eq_ep_hyp}
+\end{equation}
+\noindent Also remember that for hyperbolic orbit $b=a \sqrt{\epsilon^2-1}$
+
+\vskip 1cm
+{\bf WHAT TO DO: }
+Make an IDL-procedure performing the above steps, taking as input
+variables the set of orbital elements
+$(a,\epsilon,i,\Omega,\omega,\tau)$ and time $t$.  The units of time
+and distances can all be specified by the variable $\mu$. For example,
+if we study the motion in the Solar system, then we know that the
+orbital period equals one year at the distance of Earth's orbit.
+According to Eq. \ref{period} we must thus use $\mu=4 \pi^2$ if time
+is measured in years and distances in Astronomical units. Other
+choices are also possible: for example if we choose $\mu=1$, then
+according to Eq. \ref{period}, the orbital period is $2 \pi$ at the
+unit distance.  This is a very natural choice, as then the circular
+orbit velocity and angular velocity also equal unity at the unit distance.
+
+
+\vskip 1cm
+\newpage
+{\isob 6. Calculation of orbital elements from $\vec R$ and $\vec V$} \ (rv\_to\_elem.pro)
+
+Here we look at the inverse problem, i.e. the calculation of orbital
+elements from the position and velocity vectors, specified in the reference
+system (e.g. Earth's orbital plane). 
+
+{\bf ELLIPTIC ORBIT: }
+
+{\bf 1)} Calculate the unit vector in the direction perpendicular to the
+orbital plane, from the vector $\vec K=\vec R \times \vec V$:
+\begin{equation}
+ \vec N = \frac{\vec R \times \vec V}{|\vec R \times \vec V|},
+\end{equation}
+\noindent from which we get (from Eq. \ref{eq_n})
+\begin{eqnarray}
+\label{eq_ome_i}
+\Omega &=& {\rm atan} (N_x,-N_y) \\ \nonumber
+ i &=& {\rm acos} (N_z)
+\end{eqnarray}
+
+{\bf 2)} Calculate the eccentricity vector $\vec e$,
+\begin{equation}
+ \vec e = -\frac{1}{\mu} \vec K \times \vec V - \vec R/r. 
+\end{equation}
+\noindent Then rotate $\vec e$  \ from the reference system to the
+orbital plane-coordinates (involves rotation by $\Omega$ around the z-axis,
+followed by rotation by $i$ around the new x-axis):
+\begin{eqnarray}
+\tilde e_x &=& ~~ \coso \ e_x + \sino \ e_y \\ \nonumber
+\tilde e_y &=& - \sino \cosi \ e_x + \coso \cosi  \ e_y + \sini \ e_z,
+\end{eqnarray}
+\noindent and finally
+\begin{eqnarray}
+\omega &=& {\rm atan} (\tilde e_y, \tilde e_x) \\ \nonumber
+ \epsilon &=& \sqrt{{\tilde e_x}^2+{\tilde e_y}^2}
+\end{eqnarray}
+
+{\bf 3)} Semi-major axis $a$ is obtained from the energy equation, $h=\frac{1}{2}v^2-\mu/r = -\frac{\mu}{2a}$ for elliptic orbit, giving
+\begin{equation}
+ a = -\frac{1}{v^2/\mu - 2/r}.
+\label{energy}
+\end{equation}
+
+{\bf 4)} Time of pericenter passage is obtained by calculating
+first the eccentric anomaly and then using Kepler's equation.
+Since $r=a(1-\epsilon \cos E)$ we obtain  
+\begin{equation}
+\cos E = \frac{(1 - r/a)}{\epsilon}
+\end{equation}
+\noindent This alone does not determine $E$ uniquely. The correct sign of $E$ is determined by the sign of $\vec R \cdot \vec V$ (for $0^\circ < E < 180^\circ$ we have $\vec R \cdot \vec V>0$)
+\begin{equation}
+E = {\rm acos}(\cos E) ~~ {\rm sign}(\vec R \cdot \vec V)
+\end{equation}
+\noindent Then calculate $M$ and finally $\tau$,
+\begin{eqnarray}
+M &=& E - \epsilon \sin E \\ \nonumber
+ \tau &=& t - M \sqrt{a^3/\mu} 
+\end{eqnarray}
+
+{\bf HYPERBOLIC ORBIT: } The treatment of hyperbolic orbit (the type
+of orbit is identified in the step 2 above if $\epsilon>1$) is again
+very similar to elliptic orbit.  Only the steps 3 and 4 are
+different. Since in the case of hyperbolic orbit the total energy is
+positive, $h=\frac{\mu}{2a}$, the sign in Eq. \ref{energy} needs to be
+reversed. Thus both elliptic and hyperbolic case can be treated if we
+use
+\begin{equation}
+ a = \frac{1}{|v^2/\mu - 2/r|}
+\end{equation}
+The step 4) needs to replaced by
+\begin{eqnarray}
+\cosh E &=& \frac{(1 + r/a)}{\epsilon} \\ \nonumber
+E &=& {\rm acosh}(cosh E)  ~~  {\rm sign}(\vec R \cdot \vec V) \\ \nonumber
+M &=& \epsilon \sinh E  -E \\ \nonumber
+ \tau &=& t - M \sqrt{a^3/\mu} 
+\end{eqnarray}
+
+
+{\bf WHAT TO DO: } Make an IDL-procedure performing the above steps,
+taking as input variables the vectors $\vec R$ and $\vec V$ and time,
+and returning the set of orbital elements
+$(a,\epsilon,i,\Omega,\omega,\tau)$.  The units of time and distances
+are specified by the variable $\mu$, as discussed earlier in the case
+of obtaining $\vec R$ and $\vec V$ from orbital elements.
+
+\newpage
+{\isob 7. Playing with orbits}
+
+
+Copy the example IDL procedures for the solution of exercises 5 and 6
+to your own directory:
+
+{\tt cp /wrk/hsalo/TM2012\_DEMO2.dir/* .}
+
+\noindent These routines include: (give the name without arguments to obtain an info message)
+
+
+{\parskip 0.05cm
+
+
+\bul {\bf elem\_to\_rv.pro} -- calculate \RR and \VV from orbital elements (Exercise 5)
+
+\bul {\bf rv\_to\_elem.pro} -- calculate orbital elements from \RR and \VV (Exercise 6)
+
+\bul {\bf elem\_to\_example.pro} -- Check the above two routines:
+
+\buu  first calculate \RR and \VV for a given time from orbital elements, 
+
+\buu then transform \RR and \VV back to orbital elements (hopefully the same!)
+
+
+\bul {\bf kepler.pro} -- solves Kepler's equation \ \ ($M$, $\epsilon$ \arrow $E$)
+
+\bul {\bf kepler\_array.pro} -- solves Kepler's equation for an array of M values
+
+\bul {\bf hkepler.pro} -- as kepler.pro, except for a hyperbolic orbit ($\epsilon>1$
+}
+
+\noindent + auxillary mathematical routines missing from basic IDL-routines
+
+{\parskip 0.15cm
+
+\bul {\bf cross\_product.pro} -- calculate vector product of two 3-element vectors
+
+\bul {\bf dot\_product.pro} -- calculate scalar product of two 3-element vectors
+
+\bul {\bf acosh.pro} -- function returning inverse hyperbolic cosine
+}
+
+
+Use the above routines in the next exercises (or better, write your own equivalent routines!)
+
+
+
+\vskip 0.5cm
+
+{\medb a) Procedure for calculating + plotting an orbit} 
+
+
+Make a subroutine-type procedure (call it for example {\tt elem\_orbit\_oma.pro})
+for calculating/plotting an orbit with given
+orbital elements  ({\tt elem=$[a, \epsilon, i, \Omega, \omega, \tau]$}), over an interval of time $t_1, t_2$.
+
+Hint: make repeated calls to {\bf elem\_to\_rv}, after checking what type
+of input/output it uses. Pay attention to the units you use.
+
+You may also have a look at the example procedure {\bf elem\_orbit.pro}
+
+
+
+
+\newpage
+
+
+{\medb b) Satellite launched from Earth orbit} 
+
+Make a main-program type procedure, where a velocity increment is
+given  to a satellite at Earth orbit:
+
+{\parskip 0.1 cm
+- in the tangential direction
+
+- in the radial direction
+
+- in the vertical direction
+}
+
+Calculate the orbital elements of the satellite. Assume that Earth
+orbit is circular with speed $30$ km/sec, and use different velocity
+increments in the range 0-30 km/sec.
+Use the procedure {\bf elem\_orbit.pro} (or the equivalent procedure you have written)
+
+For examples of solutions, see
+
+{\parskip 0.1 cm
+\bul {\bf elem\_orbit\_demo\_tangential.pro}
+
+\bul {\bf elem\_orbit\_demo\_radial.pro}
+
+\bul {\bf elem\_orbit\_demo\_vertical.pro} 
+
+\bul {\bf elem\_orbit\_demo\_vertical.pro} -- illustrates the effect of vertical
+velocity increment using IDL's interactive xplot3d-plotting procedure
+}
+
+
+Check also other example routines:
+
+\bul {\bf elem\_rv\_demo1.pro} -- Solves the Exercise II.1 (satellite
+launced with a velocity vector making different angles with the
+tangential direction}
+
+\bul {\bf elem\_rv\_demo2.pro} -- shows how a 'swarm of satellites'
+launched from Earth disperses with time.
+
+
+
+
+%-------------------------------------------------------------------------
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
